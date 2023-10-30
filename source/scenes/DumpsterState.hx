@@ -1,8 +1,8 @@
 package scenes;
+
 import flixel.FlxState;
 import flixel.FlxSprite;
 import singletons.GameManager;
-import flixel.math.FlxRandom;
 import flixel.input.mouse.FlxMouseEvent;
 import flixel.util.FlxTimer;
 import flixel.FlxG;

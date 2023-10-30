@@ -5,7 +5,6 @@ import flixel.FlxState;
 import singletons.GameManager;
 import flixel.FlxG;
 import flixel.input.mouse.FlxMouseEvent;
-
 import flixel.util.FlxTimer;
 import flixel.text.FlxText;
 class OpenBoxState extends FlxState
@@ -70,7 +69,7 @@ class OpenBoxState extends FlxState
 				var credits = new FlxText(
 					FlxG.width/2,
 					FlxG.height/2,
-					"entropy\na prototype by jd calvelli",
+					"oblivion\na prototype by jd calvelli",
 					16);
 				credits.color = 0xFF000000;
 				add(credits);

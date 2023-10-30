@@ -1,11 +1,9 @@
 package scenes;
 
 import flixel.FlxState;
-
 import flixel.FlxSprite;
 import flixel.input.mouse.FlxMouseEvent;
 import flixel.FlxG;
-import singletons.GameManager;
 class ClosedBoxState extends FlxState
 {
 	var background:FlxSprite = new FlxSprite();
@@ -14,6 +12,8 @@ class ClosedBoxState extends FlxState
 	override public function create()
 	{
 		super.create();
+
+		FlxG.mouse.useSystemCursor = true;
 
 		// setup background
 		background.loadGraphic("assets/images/Background.PNG");
@@ -33,7 +33,6 @@ class ClosedBoxState extends FlxState
 	function onMouseDown(sprite:FlxSprite)
 	{
 		// transition to open box state
-		trace("switch state");
 		FlxG.switchState(new scenes.OpenBoxState());
 	}
 }
