@@ -7,7 +7,6 @@ class GameManager
     public static final Instance:GameManager = new GameManager();
 
     // properties on instance
-    public var test = "Hello Haxe";
     public var currentObject:FlxSprite;
 
     // private constructor stops class instantiation elsewhere

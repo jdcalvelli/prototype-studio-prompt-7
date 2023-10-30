@@ -11,10 +11,10 @@ class OpenBoxState extends FlxState
 	var background:FlxSprite = new FlxSprite();
 	var openBox:FlxSprite = new FlxSprite();
 	var overlay:FlxSprite = new FlxSprite();
-	var objects = [
-		"item1" => new FlxSprite().loadGraphic("assets/images/thing-one.PNG"),
-		"item2" => new FlxSprite().loadGraphic("assets/images/thing-two.PNG"),
-		"item3" => new FlxSprite().loadGraphic("assets/images/thing-three.PNG"),
+	var objects:Array<FlxSprite> = [
+		new FlxSprite().loadGraphic("assets/images/thing-one.PNG"),
+		new FlxSprite().loadGraphic("assets/images/thing-two.PNG"),
+		new FlxSprite().loadGraphic("assets/images/thing-three.PNG"),
 	];
 
 	override public function create()
@@ -38,6 +38,21 @@ class OpenBoxState extends FlxState
 
 		// set up items
 		for (object in objects) {
+			object.setPosition(FlxG.width/2, FlxG.height/2 - 115);
+
+			if (object == objects[0])
+			{
+				object.x = object.x - 80;
+			}
+			if (object == objects[1])
+			{
+				object.x = object.x;
+			}
+			if (object == objects[2])
+			{
+				object.x = object.x + 80;
+			}
+
 			add(object);
 			FlxMouseEvent.add(object, onMouseDown);
 		}
@@ -51,7 +66,11 @@ class OpenBoxState extends FlxState
 	function onMouseDown(sprite:FlxSprite)
 	{
 		// send to table scene with object
-		GameManager.Instance.currentObject = sprite;
+		FlxG.signals.preStateSwitch.addOnce(() ->
+		{
+			GameManager.Instance.currentObject = sprite;
+			remove(sprite);
+		});
 		FlxG.switchState(new scenes.TableState());
 	}
 }
