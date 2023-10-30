@@ -6,6 +6,8 @@ import singletons.GameManager;
 import flixel.FlxG;
 import flixel.input.mouse.FlxMouseEvent;
 
+import flixel.util.FlxTimer;
+import flixel.text.FlxText;
 class OpenBoxState extends FlxState
 {
 	var background:FlxSprite = new FlxSprite();
@@ -35,27 +37,46 @@ class OpenBoxState extends FlxState
 		for (object in objects) {
 			object.setPosition(FlxG.width/2, FlxG.height/2 - 115);
 
-			if (object == objects[0])
+			if (object == objects[0] && !GameManager.Instance.firstObjectUsed)
 			{
 				object.x = object.x - 80;
+				add(object);
 			}
-			if (object == objects[1])
+			else if (object == objects[1] && !GameManager.Instance.secondObjectUsed)
 			{
 				object.x = object.x;
+				add(object);
 			}
-			if (object == objects[2])
+			else if (object == objects[2] && !GameManager.Instance.thirdObjectUsed)
 			{
 				object.x = object.x + 80;
+				add(object);
 			}
 
-			add(object);
 			FlxMouseEvent.add(object, onMouseDown);
 		}
-	}
 
-	override public function update(elapsed:Float)
-	{
-		super.update(elapsed);
+		if (GameManager.Instance.firstObjectUsed &&
+		GameManager.Instance.secondObjectUsed &&
+		GameManager.Instance.thirdObjectUsed)
+		{
+			for (object in objects)
+			{
+				FlxMouseEvent.remove(object);
+			}
+			new FlxTimer().start(4, (_)->
+			{
+				remove(openBox);
+				var credits = new FlxText(
+					FlxG.width/2,
+					FlxG.height/2,
+					"entropy\na prototype by jd calvelli",
+					16);
+				credits.color = 0xFF000000;
+				add(credits);
+			});
+		}
+
 	}
 
 	function onMouseDown(sprite:FlxSprite)
@@ -63,7 +84,22 @@ class OpenBoxState extends FlxState
 		// send to table scene with object
 		FlxG.signals.preStateSwitch.addOnce(() ->
 		{
-			GameManager.Instance.currentObject = sprite;
+			if (sprite == objects[0])
+			{
+				GameManager.Instance.selectedObject = "first";
+				GameManager.Instance.firstObjectUsed = true;
+			}
+			else if (sprite == objects[1])
+			{
+				GameManager.Instance.selectedObject = "second";
+				GameManager.Instance.secondObjectUsed = true;
+			}
+			else if (sprite == objects[2])
+			{
+				GameManager.Instance.selectedObject = "third";
+				GameManager.Instance.thirdObjectUsed = true;
+			}
+
 			remove(sprite);
 		});
 		FlxG.switchState(new scenes.TableState());

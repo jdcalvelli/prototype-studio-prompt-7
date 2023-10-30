@@ -11,6 +11,12 @@ class DumpsterState extends FlxState {
     var background:FlxSprite = new FlxSprite();
     var dumpster:FlxSprite = new FlxSprite();
 
+    var objects:Array<FlxSprite> = [
+        new FlxSprite().loadGraphic("assets/images/thing-one.PNG"),
+        new FlxSprite().loadGraphic("assets/images/thing-two.PNG"),
+        new FlxSprite().loadGraphic("assets/images/thing-three.PNG"),
+    ];
+
     override public function create()
     {
         // setup background
@@ -23,32 +29,49 @@ class DumpsterState extends FlxState {
         dumpster.screenCenter();
         add(dumpster);
 
-        // add current object
-        GameManager.Instance.currentObject.screenCenter();
-        GameManager.Instance.currentObject.setPosition(
-            GameManager.Instance.currentObject.x + new FlxRandom().int(55, 80),
-            GameManager.Instance.currentObject.y - new FlxRandom().int(50, 70),
-        );
-        GameManager.Instance.currentObject.visible = false;
-        add(GameManager.Instance.currentObject);
+        for (object in objects) {
+            object.setPosition(FlxG.width/2, FlxG.height/2);
+
+            if (object == objects[0] && GameManager.Instance.firstObjectUsed && GameManager.Instance.selectedObject != "first")
+            {
+                object.setPosition(object.x, object.y - 100);
+                add(object);
+            }
+            if (object == objects[1] && GameManager.Instance.secondObjectUsed && GameManager.Instance.selectedObject != "second")
+            {
+                object.setPosition(object.x + 50, object.y - 100);
+                add(object);
+            }
+            if (object == objects[2] && GameManager.Instance.thirdObjectUsed && GameManager.Instance.selectedObject != "third")
+            {
+                object.setPosition(object.x + 100, object.y - 100);
+                add(object);
+            }
+
+            FlxMouseEvent.add(object, onMouseDown);
+        }
 
         FlxMouseEvent.add(dumpster, onMouseDown);
     }
-
-    override public function update(elapsed:Float){}
 
     // callbacks
 
     function onMouseDown(sprite:FlxSprite)
     {
-        GameManager.Instance.currentObject.visible = true;
+        switch GameManager.Instance.selectedObject
+        {
+            case "first":
+                objects[0].setPosition(objects[0].x, objects[0].y - 100);
+                add(objects[0]);
+            case "second":
+                objects[1].setPosition(objects[1].x + 50, objects[1].y - 100);
+                add(objects[1]);
+            case "third":
+                objects[2].setPosition(objects[2].x + 100, objects[2].y - 100);
+                add(objects[2]);
+        }
 
         new FlxTimer().start(1, (_)->{
-            FlxG.signals.preStateSwitch.addOnce(() ->
-            {
-                GameManager.Instance.discardedObjects.push(GameManager.Instance.currentObject);
-                remove(GameManager.Instance.currentObject);
-            });
             FlxG.switchState(new scenes.OpenBoxState());
         });
     }

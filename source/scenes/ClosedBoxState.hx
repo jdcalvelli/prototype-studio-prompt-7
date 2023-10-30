@@ -29,11 +29,6 @@ class ClosedBoxState extends FlxState
 		FlxMouseEvent.add(closedBox, onMouseDown);
 	}
 
-	override public function update(elapsed:Float)
-	{
-		super.update(elapsed);
-	}
-
 	// callbacks
 	function onMouseDown(sprite:FlxSprite)
 	{

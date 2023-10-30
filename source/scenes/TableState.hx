@@ -15,6 +15,12 @@ class TableState extends FlxState
 
     var person:FlxSprite = new FlxSprite();
 
+    var objects:Array<FlxSprite> = [
+        new FlxSprite().loadGraphic("assets/images/thing-one.PNG"),
+        new FlxSprite().loadGraphic("assets/images/thing-two.PNG"),
+        new FlxSprite().loadGraphic("assets/images/thing-three.PNG"),
+    ];
+
     var priceTags:Array<FlxSprite> = [
         new FlxSprite().loadGraphic("assets/images/one-dollar-tag.PNG"),
         new FlxSprite().loadGraphic("assets/images/two-dollar-tag.PNG"),
@@ -40,8 +46,22 @@ class TableState extends FlxState
         add(table);
 
         // set up item
-        GameManager.Instance.currentObject.setPosition(FlxG.width/2 - 70, FlxG.height/2);
-        add(GameManager.Instance.currentObject);
+
+        switch GameManager.Instance.selectedObject
+        {
+            case "first":
+                objects[0].screenCenter();
+                objects[0].y = objects[0].y + 30;
+                add(objects[0]);
+            case "second":
+                objects[1].screenCenter();
+                objects[1].y = objects[1].y + 30;
+                add(objects[1]);
+            case "third":
+                objects[2].screenCenter();
+                objects[2].y = objects[2].y + 30;
+                add(objects[2]);
+        }
 
         // set up tags
         for (tag in priceTags)
@@ -53,12 +73,12 @@ class TableState extends FlxState
                 tag.x = tag.x + 80;
                 tag.y = tag.y + 20;
             }
-            if (tag == priceTags[1])
+            else if (tag == priceTags[1])
             {
                 tag.x = tag.x + 80;
                 tag.y = tag.y + 45;
             }
-            if (tag == priceTags[2])
+            else if (tag == priceTags[2])
             {
                 tag.x = tag.x + 80;
                 tag.y = tag.y + 70;
@@ -70,18 +90,11 @@ class TableState extends FlxState
         }
     }
 
-    override public function update(elapsed:Float)
-    {
-        super.update(elapsed);
-    }
-
     // callbacks
     function OnMouseDown(sprite:FlxSprite)
     {
-        sprite.setPosition(
-            GameManager.Instance.currentObject.x + 50,
-            GameManager.Instance.currentObject.y + 10,
-        );
+        sprite.screenCenter();
+        sprite.setPosition(sprite.x + 40, sprite.y + 10);
 
         for (tag in priceTags)
         {
@@ -110,10 +123,6 @@ class TableState extends FlxState
                             ease:FlxEase.sineInOut,
                             onComplete: (?_)->
                             {
-                                FlxG.signals.preStateSwitch.addOnce(() ->
-                                {
-                                    remove(GameManager.Instance.currentObject);
-                                });
                                 FlxG.switchState(new scenes.DumpsterState());
                             }
                         }
