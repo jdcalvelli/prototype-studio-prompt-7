@@ -10,7 +10,6 @@ class ClosedBoxState extends FlxState
 {
 	var background:FlxSprite = new FlxSprite();
 	var closedBox:FlxSprite = new FlxSprite();
-	var overlay:FlxSprite = new FlxSprite();
 
 	override public function create()
 	{
@@ -25,11 +24,6 @@ class ClosedBoxState extends FlxState
 		closedBox.loadGraphic("assets/images/box-unopened.PNG");
 		closedBox.screenCenter();
 		add(closedBox);
-
-		// set up overlay
-		overlay.loadGraphic("assets/images/item-holder.PNG");
-		overlay.screenCenter();
-		add(overlay);
 
 		// mouse down event
 		FlxMouseEvent.add(closedBox, onMouseDown);

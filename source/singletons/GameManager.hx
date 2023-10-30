@@ -9,6 +9,8 @@ class GameManager
     // properties on instance
     public var currentObject:FlxSprite;
 
+    public var discardedObjects:Array<FlxSprite> = new Array<FlxSprite>();
+
     // private constructor stops class instantiation elsewhere
     private function new() {}
 }

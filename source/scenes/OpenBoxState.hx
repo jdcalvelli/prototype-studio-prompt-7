@@ -5,12 +5,12 @@ import flixel.FlxState;
 import singletons.GameManager;
 import flixel.FlxG;
 import flixel.input.mouse.FlxMouseEvent;
-import singletons.GameManager;
+
 class OpenBoxState extends FlxState
 {
 	var background:FlxSprite = new FlxSprite();
 	var openBox:FlxSprite = new FlxSprite();
-	var overlay:FlxSprite = new FlxSprite();
+
 	var objects:Array<FlxSprite> = [
 		new FlxSprite().loadGraphic("assets/images/thing-one.PNG"),
 		new FlxSprite().loadGraphic("assets/images/thing-two.PNG"),
@@ -30,11 +30,6 @@ class OpenBoxState extends FlxState
 		openBox.loadGraphic("assets/images/box-opened.PNG");
 		openBox.screenCenter();
 		add(openBox);
-
-		// set up overlay
-		overlay.loadGraphic("assets/images/item-holder.PNG");
-		overlay.screenCenter();
-		add(overlay);
 
 		// set up items
 		for (object in objects) {

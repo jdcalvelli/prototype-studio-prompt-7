@@ -5,13 +5,15 @@ import flixel.FlxSprite;
 import singletons.GameManager;
 import flixel.FlxG;
 import flixel.input.mouse.FlxMouseEvent;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.util.FlxTimer;
 class TableState extends FlxState
 {
     var background:FlxSprite = new FlxSprite();
     var table:FlxSprite = new FlxSprite();
-    var overlay:FlxSprite = new FlxSprite();
 
-    var currentObject:FlxSprite;
+    var person:FlxSprite = new FlxSprite();
 
     var priceTags:Array<FlxSprite> = [
         new FlxSprite().loadGraphic("assets/images/one-dollar-tag.PNG"),
@@ -25,6 +27,13 @@ class TableState extends FlxState
         background.loadGraphic("assets/images/Background.PNG");
         background.screenCenter();
         add(background);
+
+        // set up person
+        person.loadGraphic("assets/images/person-spritesheet.png", true, 640, 360);
+        person.screenCenter();
+        person.setPosition(person.x - FlxG.width/2 - 100, person.y);
+
+        add(person);
 
         // setup table
         table.loadGraphic("assets/images/table.PNG");
@@ -59,11 +68,6 @@ class TableState extends FlxState
 
             FlxMouseEvent.add(tag, OnMouseDown);
         }
-
-        // set up overlay
-        overlay.loadGraphic("assets/images/item-holder.PNG");
-        overlay.screenCenter();
-        add(overlay);
     }
 
     override public function update(elapsed:Float)
@@ -83,5 +87,40 @@ class TableState extends FlxState
         {
             FlxMouseEvent.remove(tag);
         }
+
+        // call the tween for the character to come see the price
+        FlxTween.tween(person,
+        {
+            x:0
+        }, 2, {
+            ease: FlxEase.sineInOut,
+            onComplete: (?_) ->
+            {
+                person.animation.frameIndex = 1;
+                new FlxTimer().start(1, (_)->
+                {
+                    person.animation.frameIndex = 2;
+                    new FlxTimer().start(1, (_)->
+                    {
+                        person.animation.frameIndex = 0;
+                        FlxTween.tween(person,
+                        {
+                            x:FlxG.width + 100
+                        }, 2, {
+                            ease:FlxEase.sineInOut,
+                            onComplete: (?_)->
+                            {
+                                FlxG.signals.preStateSwitch.addOnce(() ->
+                                {
+                                    remove(GameManager.Instance.currentObject);
+                                });
+                                FlxG.switchState(new scenes.DumpsterState());
+                            }
+                        }
+                        );
+                    });
+                });
+            }
+        });
     }
 }
