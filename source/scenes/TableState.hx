@@ -4,6 +4,7 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 import singletons.GameManager;
 import flixel.FlxG;
+import flixel.input.mouse.FlxMouseEvent;
 class TableState extends FlxState
 {
     var background:FlxSprite = new FlxSprite();
@@ -12,10 +13,10 @@ class TableState extends FlxState
 
     var currentObject:FlxSprite;
 
-    var priceTags:Map<String, FlxSprite> = [
-        "tag1" => new FlxSprite().loadGraphic("assets/images/one-dollar-tag.PNG"),
-        "tag2" => new FlxSprite().loadGraphic("assets/images/two-dollar-tag.PNG"),
-        "tag3" => new FlxSprite().loadGraphic("assets/images/three-dollar-tag.PNG"),
+    var priceTags:Array<FlxSprite> = [
+        new FlxSprite().loadGraphic("assets/images/one-dollar-tag.PNG"),
+        new FlxSprite().loadGraphic("assets/images/two-dollar-tag.PNG"),
+        new FlxSprite().loadGraphic("assets/images/three-dollar-tag.PNG"),
     ];
 
     override public function create()
@@ -36,7 +37,27 @@ class TableState extends FlxState
         // set up tags
         for (tag in priceTags)
         {
+            tag.screenCenter();
+
+            if (tag == priceTags[0])
+            {
+                tag.x = tag.x + 80;
+                tag.y = tag.y + 20;
+            }
+            if (tag == priceTags[1])
+            {
+                tag.x = tag.x + 80;
+                tag.y = tag.y + 45;
+            }
+            if (tag == priceTags[2])
+            {
+                tag.x = tag.x + 80;
+                tag.y = tag.y + 70;
+            }
+
             add(tag);
+
+            FlxMouseEvent.add(tag, OnMouseDown);
         }
 
         // set up overlay
@@ -48,5 +69,19 @@ class TableState extends FlxState
     override public function update(elapsed:Float)
     {
         super.update(elapsed);
+    }
+
+    // callbacks
+    function OnMouseDown(sprite:FlxSprite)
+    {
+        sprite.setPosition(
+            GameManager.Instance.currentObject.x + 50,
+            GameManager.Instance.currentObject.y + 10,
+        );
+
+        for (tag in priceTags)
+        {
+            FlxMouseEvent.remove(tag);
+        }
     }
 }
